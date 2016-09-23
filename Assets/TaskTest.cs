@@ -11,7 +11,8 @@ public class TaskTest : MonoBehaviour
 
         var task = Task.Run(() => print("First action."))
             .ContinueWith(t => print("wait for click"))
-            .ContinueWith(WaitForClick())
+            .ContinueWith(WaitForClick()) // <- IEnumerator
+            .ContinueWith(new WaitForSeconds(1))
             .ContinueWith(t =>
             {
                 print("Second action.");
@@ -21,7 +22,10 @@ public class TaskTest : MonoBehaviour
             {
                 print("Third action.");
             });
-        yield break;
+
+        yield return task;
+
+        print("All done!");
     }
 
     private IEnumerator WaitForClick()

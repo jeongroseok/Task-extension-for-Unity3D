@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using UnityEngine;
 
 namespace System.Threading.Tasks
@@ -10,7 +8,7 @@ namespace System.Threading.Tasks
     /// <summary>
     /// Represents an asynchronous task.
     /// </summary>
-    public abstract class Task
+    public abstract class Task : IEnumerator
     {
         private static readonly ThreadLocal<int> executionDepth = new ThreadLocal<int>(() => 0);
         private static readonly Action<Action> immediateExecutor = a =>
@@ -389,6 +387,12 @@ namespace System.Threading.Tasks
             timer.Change(timespan, TimeSpan.FromMilliseconds(-1));
             return tcs.Task;
         }
+
+        #region implements IEnumerator
+        public object Current { get { return null; } }
+        public bool MoveNext() { return !IsCompleted; }
+        public void Reset() { }
+        #endregion
     }
 
     /// <summary>
